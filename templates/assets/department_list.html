@@ -1,0 +1,26 @@
+<!-- admin_staff/department_list.html -->
+
+{% extends 'mis/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header">
+                <h1>Departments</h1>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    {% for department in departments %}
+                        <li class="list-group-item">
+                            <a href="{% url 'department_detail' department.pk %}" class="font-weight-bold text-success">{{ department.name }}</a>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item">No departments found.</li>
+                    {% endfor %}
+                </ul>
+                <a href="{% url 'department_create' %}" class="btn btn-primary mt-3">Add new department</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
