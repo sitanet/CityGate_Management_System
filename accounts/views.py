@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.http import urlsafe_base64_decode
 
 from accounts.utils import detectUser, send_verification_email
+from asset_system.models import Asset, Asset_Class
 from follow_app.models import NYSC, Business, Career, Family, Household, Member
 
 
@@ -353,6 +354,7 @@ def past_dashboard(request):
     member_married = Member.objects.filter(marital_status=2).count()
     member_business = Business.objects.all().count()
     member_career = Career.objects.all().count()
+    member_asset = Asset.objects.all().count()
     
 
     context = {
@@ -367,6 +369,7 @@ def past_dashboard(request):
         'member_teenager':member_teenager,
         'member_business':member_business,
         'member_career':member_career,
+        'member_asset':member_asset,
 
     }
     return render(request, 'pastorate/past_dashboard.html', context)
@@ -559,11 +562,18 @@ def forgot_password(request):
             send_verification_email(request, user, mail_subject, email_template)
 
             messages.success(request, 'Password reset link has been sent to your email address.')
-            return redirect('forgot_password')
+            return redirect('forget_success')
         else:
             messages.error(request, 'Account does not exist')
             return redirect('forgot_password')
     return render(request, 'accounts/forgot_password.html')
+
+
+
+def forget_success(request):
+    return render(request, 'accounts/forget_success.html')
+
+
 
 
 

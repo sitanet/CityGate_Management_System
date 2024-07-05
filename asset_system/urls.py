@@ -17,6 +17,16 @@ urlpatterns = [
     path('departments/<int:pk>/edit/', views.department_edit, name='department_edit'),
     path('departments/<int:pk>/delete/', views.department_delete, name='department_delete'),
 
+
+    path('asset_class_create', views.asset_class_create, name='asset_class_create'),
+    path('asset_classes/', views.asset_class_list, name='asset_class_list'),
+    path('asset_classes/<int:pk>/', views.asset_class_detail, name='asset_class_detail'),
+    path('asset_classes/<int:pk>/edit/', views.asset_class_edit, name='asset_class_edit'),
+    path('asset_classes/<int:pk>/delete/', views.asset_class_delete, name='asset_class_delete'),
+    path('asset_report_list', views.asset_report_list, name='asset_report_list'),
+    path('asset_depreciation_report/', views.asset_depreciation_report, name='asset_depreciation_report'),
+
+
     # Category URLs
     path('categories/', views.category_list, name='category_list'),
     path('categories/<int:pk>/', views.category_detail, name='category_detail'),
@@ -35,7 +45,7 @@ urlpatterns = [
     path('locations/<int:pk>/delete/', views.location_delete, name='location_delete'),
 
 
-
+    
 
     path('maintenance/create/', views.maintenance_record_create, name='maintenance_record_create'),
     path('maintenance/<int:pk>/', views.maintenance_record_detail, name='maintenance_record_detail'),

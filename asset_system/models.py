@@ -19,6 +19,14 @@ class Location(models.Model):
 
 
 
+class Asset_Class(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+
+
 class Item(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
@@ -36,16 +44,20 @@ class AssetCategory(models.Model):
         return self.name
 
 class Asset(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=200)
     category = models.ForeignKey(AssetCategory, on_delete=models.CASCADE)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    asset_class = models.ForeignKey(Asset_Class, on_delete=models.CASCADE, default=1)
+    unit = models.IntegerField()
+    percent_dep  = models.DecimalField(max_digits=10, decimal_places=2)
     purchase_date = models.DateField()
     cost = models.DecimalField(max_digits=10, decimal_places=2)
+    Total_cost = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField(blank=True, null=True)
-    serial_number = models.CharField(max_length=100, unique=True)
+    serial_number = models.CharField(max_length=250)
     condition = models.CharField(max_length=50, choices=[('New', 'New'), ('Good', 'Good'), ('Fair', 'Fair'), ('Poor', 'Poor')])
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
-    assigned_to = models.CharField(max_length=100, unique=True)
+    assigned_to = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name

@@ -1,14 +1,18 @@
 from django import forms
-from .models import Asset, Location, MaintenanceRecord
+from .models import Asset, Asset_Class, Location, MaintenanceRecord
 
 class AssetForm(forms.ModelForm):
     class Meta:
         model = Asset
         fields = '__all__'
+        exclude = ['Total_cost']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'category': forms.Select(attrs={'class': 'form-control'}),
             'department': forms.Select(attrs={'class': 'form-control'}),
+            'asset_class': forms.Select(attrs={'class': 'form-control'}),
+            'unit': forms.NumberInput(attrs={'class': 'form-control'}),
+            'percent_dep': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'purchase_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'cost': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'serial_number': forms.TextInput(attrs={'class': 'form-control'}),
@@ -39,6 +43,18 @@ class DepartmentForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+        }
+
+
+
+
+class AssetClassForm(forms.ModelForm):
+    class Meta:
+        model = Asset_Class
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+           
         }
 
 class AssetCategoryForm(forms.ModelForm):
