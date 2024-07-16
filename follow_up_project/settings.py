@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     "django_apscheduler",
     'crispy_forms',
     'asset_system',
+    'tinymce',
    
    
     

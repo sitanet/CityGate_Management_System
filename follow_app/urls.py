@@ -89,19 +89,30 @@ urlpatterns = [
     
     path('household_list/', views.household_list, name='household_list'),
     # path('households/add/', views.add_household, name='add_household'),
+  
+
+    
+
+
+    path('create-household/', views.create_household, name='create_household'),
+    path('search-members/', views.search_members, name='search_members'),
+
+    # #Complain
+    # path('file_complaint/', views.file_complaint, name='file_complaint'),
+    path('households/add_member/<int:household_id>/', views.add_member, name='add_member'),
+    # path('households/complaints/', views.households_with_complaints, name='households_with_complaints'),
+    # path('households/<int:household_id>/complaints/', views.household_complaints, name='household_complaints'),
+    # path('complaints/<int:complaint_id>/resolve/', views.mark_resolved, name='mark_resolved'),
+   
+    # path('create-tcgc-household/', views.create_tcgc_household, name='create_tcgc_household'),
     # path('search-members/', views.search_members, name='search_members'),
-
-
-    path('create_household/', views.create_household, name='create_household'),
-    path('search_members/', views.search_members, name='search_members'),
-    path('household/<int:household_id>/add/', views.add_household_member, name='add_household_member'),
-
-
-
+    path('members_by_username/<int:username_id>/', views.members_by_household_username, name='members_by_household_username'),
+    path('query_member/<int:member_id>/', views.query_member, name='query_member'),
     path('household/<int:household_id>/', views.household_detail, name='household_detail'),
-    path('household/<int:household_id>/edit/<int:member_id>/', views.edit_household_member, name='edit_household_member'),
-    path('household/<int:household_id>/delete/<int:member_id>/', views.delete_household_member, name='delete_household_member'),
-    path('search_member_add/', views.search_member_add, name='search_member_add'),
+    # path('household/<int:household_id>/add_member/', views.add_member, name='add_member'),
+    path('household/<int:household_member_id>/edit_member/', views.edit_member, name='edit_member'),
+    path('household/<int:household_member_id>/delete_member/', views.delete_member, name='delete_member'),
+    # path('search_member_add/', views.search_member_add, name='search_member_add'),
 
 
 
@@ -114,5 +125,14 @@ urlpatterns = [
     path('teenagers/delete/<int:teenager_id>/', views.delete_teenager, name='delete_teenager'),
     path('teenagers/<int:teenager_id>/', views.teenager_detail, name='teenager_detail'),
     path('business_detail_admin/<int:pk>/', views.business_detail_admin, name='business_detail_admin'),
+
+
+    path('create_message/', views.create_message, name='create_message'),
+    path('messages/', views.past_message_list, name='past_message_list'),
+    path('house_message_list/', views.house_message_list, name='house_message_list'),
+    path('message/<int:message_id>/', views.past_message_detail, name='past_message_detail'),
+    path('message/<int:message_id>/', views.house_message_detail, name='house_message_detail'),
+    path('messages/<int:message_id>/reply/', views.reply_message, name='reply_message'),
+
 
 ]

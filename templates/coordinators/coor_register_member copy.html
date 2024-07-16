@@ -108,10 +108,10 @@
                             <div class="input-field">
                                 <label>Team Lead</label>
                                 <select id="team_lead" name="team_lead" onchange="ddlselect();" >
-                {% for team_lead in team_lead %}
-                    <option value="{{ team_lead.id }}" {% if team_lead.id == form.team_lead.value %}selected{% endif %}>{{ team_lead.name }}</option>
-                {% endfor %}
-            </select>
+                                {% for team_lead in team_lead %}
+                                    <option value="{{ team_lead.id }}" >{{ team_lead.name }}</option>
+                                {% endfor %}
+                            </select>
                             </div>
           
                 <div class="input-field">
@@ -119,7 +119,7 @@
                 <select id="team_member" name="team_member" onchange="ddlselect();">
                     <option value="">Select a Team Member</option>
                     {% for team_member in team_member %}
-                        <option value="{{ team_member.team_lead_id }}" {% if team_member.team_lead_id == form.team_member.value %}selected{% endif %}>{{ team_member.name }}</option>
+                        <option value="{{ team_member.name_id }}" >{{ team_member.name }}</option>
                     {% endfor %}
                 </select>
             </div>

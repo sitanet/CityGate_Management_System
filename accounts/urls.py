@@ -24,6 +24,8 @@ urlpatterns = [
     path('change_password/', views.change_password, name='change_password'),
     path('users/edit/<int:id>/', views.edit_user, name='edit_user'),
 
+    path('kbn_career_dashboard/', views.kbn_career_dashboard, name='kbn_career_dashboard'),
+    path('household_head_dashboard/', views.household_head_dashboard, name='household_head_dashboard'),
 
 
     path('active_member/', views.active_member, name='active_member'),

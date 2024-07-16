@@ -58,6 +58,10 @@ class User(AbstractBaseUser):
     BUSINESS = 8
     SERVICE_TEAM = 9
     MANAGEMENT_INFORMATION_SYSTEM = 10
+    HOUSEHOLD_HEAD = 11
+    KBN_CAREER = 12
+    KBN_BUSINESS = 13
+
   
 
     MALE = 1
@@ -73,12 +77,15 @@ class User(AbstractBaseUser):
         (CARRER, 'Career'),
         (BUSINESS, 'Business'),
         (SERVICE_TEAM, 'Service Team'),
-        (MANAGEMENT_INFORMATION_SYSTEM, 'Management Information System')
+        (MANAGEMENT_INFORMATION_SYSTEM, 'Management Information System'),
+        (HOUSEHOLD_HEAD, 'Household Head'),
+        (KBN_CAREER, 'Kbn Career'),
+        (KBN_BUSINESS, 'Kbn Business')
      
     )
 
     profile_picture = models.ImageField(upload_to='users/profile_pictures', default='images/avatar.jpg')
-    first_name = models.CharField(max_length=50)
+    first_name = models.CharField(max_length=60)
     last_name = models.CharField(max_length=50)
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(max_length=100, unique=True)
@@ -130,6 +137,12 @@ class User(AbstractBaseUser):
             user_role = 'Service Team'
         elif self.role == 10:
             user_role = 'Management Information System'
+        elif self.role == 11:
+            user_role = 'Household Head'
+        elif self.role == 12:
+            user_role = 'KBN Career'
+        elif self.role == 13:
+            user_role = 'KBN Business'
 
         return user_role
 

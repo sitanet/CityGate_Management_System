@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import date
 from accounts.models import User
+from follow_up_project import settings
 
 
 class Pastorate(models.Model):
@@ -15,11 +16,9 @@ class Pastorate(models.Model):
 
 # Create your models here.
 class Team_Lead(models.Model):
-    # name = models.CharField(max_length=100)
+   
     name = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    # def __str__(self):
-    #     return self.name
+   
 
     def __str__(self):
         return str(self.name)
@@ -90,6 +89,7 @@ class Member(models.Model):
     kcc_center = models.CharField(max_length=20,blank=True, null=True)
     place_of_work = models.CharField(max_length=50,blank=True, null=True)
     position = models.CharField(max_length=40,blank=True, null=True)
+    house_position = models.CharField(max_length=50, default="non-house-member")
     
     wedding_ann = models.DateField(blank=True, null=True)
     join = models.DateField(blank=True, null=True)
@@ -97,8 +97,16 @@ class Member(models.Model):
     about = models.CharField(max_length=20,blank=True, null=True)
     dept = models.CharField(max_length=20,blank=True, null=True)
     purpose = models.CharField(max_length=20,blank=True, null=True)
-    team_lead = models.CharField(max_length=20, blank=True, null=True)
-    team_member = models.CharField(max_length=20, blank=True, null=True)
+    # team_lead = models.CharField(max_length=20, blank=True, null=True)
+    # team_member = models.CharField(max_length=20, blank=True, null=True)
+
+
+    # team_lead = models.ForeignKey(Team_Lead, on_delete=models.SET_NULL, null=True, blank=True)
+    # team_member = models.ForeignKey(TeamMember, on_delete=models.SET_NULL, null=True, blank=True)
+
+    
+    team_lead = models.CharField(max_length=20,blank=True, null=True)
+    team_member = models.CharField(max_length=20,blank=True, null=True)
    
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     status = models.PositiveIntegerField(choices=STATUS, default='1', blank=True)
@@ -322,13 +330,43 @@ class OtherQualification(models.Model):
 
 
 
+
+
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
 class Household(models.Model):
     household_name = models.CharField(max_length=255)
+    username = models.ForeignKey(User, on_delete=models.CASCADE)
     members = models.ManyToManyField(Member, through='HouseholdMember')
-
 
     def __str__(self):
         return self.household_name
+
+
+
+from django.db import models
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+class MemberQuery(models.Model):
+    member = models.ForeignKey(Member, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    query_text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Query by {self.user.username} on {self.member.first_name} {self.member.last_name}"
+
+
+
+
+
+
+
+
 
 class HouseholdMember(models.Model):
     household = models.ForeignKey(Household, on_delete=models.CASCADE)
@@ -338,7 +376,8 @@ class HouseholdMember(models.Model):
 
     def __str__(self):
         return f"{self.member} - {self.position}"
-    
+
+
 
 
 from django.db import models
@@ -355,3 +394,26 @@ class Teenager(models.Model):
 
     def __str__(self):
         return f"{self.member.first_name} {self.member.last_name} - {self.current_school_name}"
+
+
+
+
+from django.conf import settings
+from django.db import models
+from tinymce.models import HTMLField
+
+class Message(models.Model):
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sent_messages')
+    recipient_role = models.PositiveSmallIntegerField(choices=User.ROLE_CHOICE)
+    subject = models.CharField(max_length=255)
+    body = HTMLField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    parent_message = models.ForeignKey('self', null=True, blank=True, related_name='replies', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.subject
+
+
+
+
+

@@ -38,7 +38,9 @@
                         </tr>
                      </thead>
                      <tbody>
-                        {% for member in member %}
+                        {% for member in members %}
+                        {% with team_lead_name=member.team_lead.name|default_if_none:"N/A" %}
+                        {% with team_member_name=member.team_member.name|default_if_none:"N/A" %}
                         <tr onclick="window.location.href='{% url 'coor_member_detail' member.id %}'" style="cursor: pointer;">
                            <td><img style="width: 40px; height: 50px;" class="img-responsive rounded-circle" src="{{ member.image.url }}" onerror="this.src='{% static 'images/avatar.jpg' %}'" alt="#" /></td>
                            <td>{{ member.first_name }}</td>
@@ -53,6 +55,8 @@
                               <a href="{% url 'coor_new_comment' member.id %}" style="font-weight: bold; color: green;">Comment</a>
                            </td>
                         </tr>
+                        {% endwith %}
+                        {% endwith %}
                         {% endfor %}
                      </tbody>
                   </table>

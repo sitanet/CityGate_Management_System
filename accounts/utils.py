@@ -38,6 +38,15 @@ def detectUser(user):
     elif user.role == 10:
         redirectUrl = 'mis_dashboard'
         return redirectUrl
+    elif user.role == 11:
+        redirectUrl = 'household_head_dashboard'
+        return redirectUrl
+    elif user.role == 12:
+        redirectUrl = 'kbn_career_dashboard'
+        return redirectUrl
+    elif user.role == 13:
+        redirectUrl = 'kbn_business_dashboard'
+        return redirectUrl
 
 
     elif user.role == None and user.is_superadmin:

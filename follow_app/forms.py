@@ -1,19 +1,24 @@
 from django import forms
 
 from accounts.models import User
-from .models import Child, Team_Lead, Member, Comment, TeamMember
+from .models import Child, HouseholdMember, Team_Lead, Member, Comment, TeamMember
 
+from django import forms
+from .models import Member, Team_Lead, TeamMember
 
 class MemberForm(forms.ModelForm):
-    # coordinator = forms.ModelChoiceField(queryset=User.objects.filter(role='2'))
-    # team_member = forms.ModelChoiceField(queryset=User.objects.filter(role='3'))
-    
     class Meta:
         model = Member
-        fields = ['image','first_name','middle_name', 'last_name', 'date_of_birth','email', 'phone_no','gender',
-                  'marital_status',
-                  'team_lead', 'team_member','status','kin_fullname','kin_birth','kin_gender',
-                   'kin_relationship','kin_address','kin_phone_no','kin_email','emergency_phone_no' ]
+        fields = [
+            'image', 'first_name', 'middle_name', 'last_name', 'date_of_birth', 'email', 'phone_no', 'gender',
+            'marital_status', 'occupation', 'address', 'nationality', 'kcc_center', 'place_of_work', 'position', 'wedding_ann',
+            'join', 'about', 'dept', 'purpose', 'team_lead', 'team_member', 'status', 'kin_fullname', 'kin_birth',
+            'kin_gender', 'kin_relationship', 'kin_address', 'kin_phone_no', 'kin_email', 'emergency_phone_no'
+        ]
+
+    team_lead = forms.ModelChoiceField(queryset=Team_Lead.objects.all())
+    team_member = forms.ModelChoiceField(queryset=TeamMember.objects.all())
+
         # exclude = ['staff']
         # widgets = {
         #     'first_name': forms.TextInput(attrs={'placeholder': 'First Name'}),
@@ -324,21 +329,28 @@ EducationalBackgroundFormSet = inlineformset_factory(Career, EducationalBackgrou
 OtherQualificationFormSet = inlineformset_factory(Career, OtherQualification, form=OtherQualificationForm, extra=1)
 
 
-
-
 from django import forms
+from django.contrib.auth import get_user_model
 from .models import Household, HouseholdMember
+
+
+User = get_user_model()
 
 class HouseholdForm(forms.ModelForm):
     class Meta:
         model = Household
-        fields = ['household_name']  # Specify the fields you want to include
+        fields = ['household_name', 'username']  # Include 'username' in the fields
 
     household_name = forms.CharField(
         label='Household Name',
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter household name'})
     )
- 
+    username = forms.ModelChoiceField(
+        queryset=User.objects.all(),
+        label='Username',
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
 
 
 class HouseholdMemberForm(forms.ModelForm):
@@ -355,8 +367,6 @@ class HouseholdMemberForm(forms.ModelForm):
         super(HouseholdMemberForm, self).__init__(*args, **kwargs)
         if self.instance and self.instance.pk:
             self.fields['member'].disabled = True
-
-
 
 
 
@@ -381,4 +391,58 @@ class TeenagerForm(forms.ModelForm):
             'career_goals': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'college_plans': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'other_future_aspirations': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+        }
+
+
+
+
+# from django import forms
+# from .models import Complaint
+
+# class ComplaintForm(forms.ModelForm):
+#     class Meta:
+#         model = Complaint
+#         fields = ['household_member', 'complaint_text']
+#         widgets = {
+#             'household_member': forms.Select(attrs={'class': 'form-control'}),
+#             'complaint_text': forms.Textarea(attrs={'class': 'form-control'}),
+#         }
+
+
+
+
+from django import forms
+from .models import Message
+from tinymce.widgets import TinyMCE
+
+class MessageForm(forms.ModelForm):
+    body = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 30}))
+    subject = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = Message
+        fields = ['recipient_role', 'subject', 'body']
+
+    # def __init__(self, *args, **kwargs):
+    #     super(MessageForm, self).__init__(*args, **kwargs)
+    #     if 'instance' in kwargs and kwargs['instance']:
+    #         if kwargs['instance'].parent_message:
+    #             self.fields['recipient_role'].widget = forms.HiddenInput()
+    #             self.fields['recipient_role'].initial = kwargs['instance'].parent_message.sender.role
+    #             self.fields['subject'].initial = f"Re: {kwargs['instance'].parent_message.subject}"
+    #         else:
+    #             self.fields['recipient_role'].widget.attrs['disabled'] = 'disabled'
+
+
+
+
+from django import forms
+from .models import Message
+
+class ReplyMessageForm(forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = ['subject', 'body']
+        widgets = {
+            'body': forms.Textarea(attrs={'rows': 5}),
         }

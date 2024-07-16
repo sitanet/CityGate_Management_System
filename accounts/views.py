@@ -91,6 +91,25 @@ def check_role_mis(user):
     else:
         raise PermissionDenied
     
+
+def check_role_household(user):
+    if user.role == 11:
+        return True
+    else:
+        raise PermissionDenied
+
+def check_role_kbn_career(user):
+    if user.role == 12:
+        return True
+    else:
+        raise PermissionDenied
+    
+def check_role_kbn_business(user):
+    if user.role == 13:
+        return True
+    else:
+        raise PermissionDenied
+    
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
@@ -310,15 +329,15 @@ def mis_dashboard(request):
 
 @login_required(login_url='login')
 def coor_dashboard(request):
-    member = Member.objects.filter(status=1).filter(team_lead=request.user.role).count()
-    member_inctive = Member.objects.filter(status=2).filter(team_lead=request.user.role).count()
-    member_male = Member.objects.filter(gender=1).filter(team_lead=request.user.role).count()
-    member_female = Member.objects.filter(gender=2).filter(team_lead=request.user.role).count()
-    member_single = Member.objects.filter(marital_status=1).filter(team_lead=request.user.role).count()
+    member = Member.objects.filter(status=1).filter(team_lead=request.user.username).count()
+    member_inctive = Member.objects.filter(status=2).filter(team_lead=request.user.username).count()
+    member_male = Member.objects.filter(gender=1).filter(team_lead=request.user.username).count()
+    member_female = Member.objects.filter(gender=2).filter(team_lead=request.user.username).count()
+    member_single = Member.objects.filter(marital_status=1).filter(team_lead=request.user.username).count()
     member_family = Family.objects.all().count()
-    member_children = Member.objects.filter(marital_status=4).filter(team_lead=request.user.role).count()
+    member_children = Member.objects.filter(marital_status=4).filter(team_lead=request.user.username).count()
     member_teenager = Member.objects.filter(marital_status=3).count()
-    member_married = Member.objects.filter(marital_status=2).filter(team_lead=request.user.role).count()
+    member_married = Member.objects.filter(marital_status=2).filter(team_lead=request.user.username).count()
     member_business = Business.objects.all().count()
     member_career = Career.objects.all().count()
     
@@ -339,6 +358,43 @@ def coor_dashboard(request):
     }
     return render(request, 'coordinators/coor_dashboard.html', context)
 
+
+
+
+
+
+
+
+
+def household_head_dashboard(request):
+    member = Member.objects.filter(status=1).filter(team_lead=request.user.username).count()
+    member_inctive = Member.objects.filter(status=2).filter(team_lead=request.user.username).count()
+    member_male = Member.objects.filter(gender=1).filter(team_lead=request.user.username).count()
+    member_female = Member.objects.filter(gender=2).filter(team_lead=request.user.username).count()
+    member_single = Member.objects.filter(marital_status=1).filter(team_lead=request.user.username).count()
+    member_family = Family.objects.all().count()
+    member_children = Member.objects.filter(marital_status=4).filter(team_lead=request.user.username).count()
+    member_teenager = Member.objects.filter(marital_status=3).count()
+    member_married = Member.objects.filter(marital_status=2).filter(team_lead=request.user.username).count()
+    member_business = Business.objects.all().count()
+    member_career = Career.objects.all().count()
+    
+
+    context = {
+        'member': member,
+        'member_inctive': member_inctive,
+        'member_male': member_male,
+        'member_female': member_female,
+        'member_single': member_single,
+        'member_family': member_family,
+        'member_children':member_children,
+        'member_married':member_married,
+        'member_business':member_business,
+        'member_career':member_career,
+        'member_teenager':member_teenager,
+        
+    }
+    return render(request, 'household_head/household_head_dashboard.html', context)
 
 
 @login_required(login_url='login')
@@ -394,6 +450,19 @@ def team_dashboard(request):
         'member_married': member_married,
     }
     return render(request, 'team_members/team_dashboard.html', context)
+
+
+
+@login_required(login_url='login')
+def kbn_career_dashboard(request):
+    return render(request, 'kbn_career/kbn_career_dashboard.html')
+
+
+@login_required(login_url='login')
+def kbn_business_dashboard(request):
+    return render(request, 'kbn_business/kbn_business_dashboard.html')
+
+
 
 
 from django.contrib.auth import update_session_auth_hash

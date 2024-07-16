@@ -8,10 +8,10 @@ from django.contrib import messages, auth
 from accounts.forms import UserForm
 from accounts.utils import send_verification_email
 
-from accounts.views import check_role_admin, check_role_coordinator
+from accounts.views import check_role_admin, check_role_coordinator, check_role_facilitator, check_role_pastorate
 from .models import NYSC, Children, Team_Lead, TeamMember
 # from accounts.context_processors import get_staff
-from .forms import Team_LeadForm, MemberForm, CommentForm
+from .forms import  Team_LeadForm, MemberForm, CommentForm
 from .models import Member, Comment
 from django.shortcuts import render, get_object_or_404
 # from .utils import custom_id
@@ -26,6 +26,10 @@ from follow_app.models import Member
 
 from django.conf import settings
 # from .tasks import send_birthday_wish_email
+
+
+def check_role_pastorate_or_admin(user):
+    return user.role in [1, 4]
 
 # Create your views here.
 
@@ -44,7 +48,7 @@ def network_not_available(request):
 
 
 @login_required(login_url='login')
-@user_passes_test(check_role_admin)
+@user_passes_test(check_role_pastorate_or_admin)
 def profile(request):
     profile = UserProfile.objects.all()
     return render(request, 'accounts/profile.html', {'profile': profile})
@@ -54,7 +58,7 @@ def profile(request):
 from django.conf import settings
 import socket
 @login_required(login_url='login')
-@user_passes_test(check_role_admin)
+@user_passes_test(check_role_pastorate_or_admin)
 
 
 
@@ -128,12 +132,18 @@ def register_member(request):
 
 
 
+
+
+
 @login_required(login_url='login')
-@user_passes_test(check_role_admin)
+@user_passes_test(check_role_pastorate_or_admin)
 
 def display_all_member(request):
     member = Member.objects.all()
     return render(request, 'admin_staff/display_all_member.html', {'member': member})
+
+
+
 
 
 
@@ -148,7 +158,7 @@ def member_detail_universal(request, id):
 
 
 @login_required(login_url='login')
-@user_passes_test(check_role_admin) 
+@user_passes_test(check_role_pastorate_or_admin)
 
 def display_kbn_business(request):
     member = Business.objects.all()
@@ -156,7 +166,7 @@ def display_kbn_business(request):
 
 
 @login_required(login_url='login')
-@user_passes_test(check_role_admin) 
+@user_passes_test(check_role_pastorate_or_admin)
 
 def display_kbn_car(request):
     member = Career.objects.all()
@@ -164,11 +174,12 @@ def display_kbn_car(request):
 
 
 @login_required(login_url='login')
-@user_passes_test(check_role_admin)
+@user_passes_test(check_role_pastorate_or_admin)
 
 def display_comment(request):
     current_user = request.user
-    comment = Comment.objects.filter(team_sup=current_user)
+    # comment = Comment.objects.filter(team_sup=current_user)
+    comment = Comment.objects.all()
     mem_com = Member.objects.all()
     context = {
          'comment':comment,
@@ -179,7 +190,7 @@ def display_comment(request):
 
 
 @login_required(login_url='login')
-@user_passes_test(check_role_admin)
+@user_passes_test(check_role_pastorate_or_admin)
 def all_comment(request):
     # current_user = request.user
     comment = Comment.objects.all()
@@ -194,19 +205,18 @@ def all_comment(request):
 
 
 @login_required(login_url='login')
-@user_passes_test(check_role_admin)
+@user_passes_test(check_role_pastorate_or_admin)
 
 def delete_member(request, id):
     member = get_object_or_404(Member, id=id)
     member.delete()
     return redirect('display_all_member')
 
-@login_required(login_url='login')
-@user_passes_test(check_role_admin)
 
 
+
 @login_required(login_url='login')
-@user_passes_test(check_role_admin)
+@user_passes_test(check_role_pastorate_or_admin)
 def member_detail(request, id):
     member = get_object_or_404(Member, id=id)
     team_lead = Team_Lead.objects.all()  # Initialize outside of the 'else' block
@@ -243,7 +253,7 @@ def add_coordinator(request):
     
     
 @login_required(login_url='login')
-@user_passes_test(check_role_admin)
+@user_passes_test(check_role_pastorate_or_admin)
 def new_comment(request, id):
     member = get_object_or_404(Member, id=id)
     coordinator = Member.objects.get(id=id)
@@ -308,17 +318,21 @@ def add_coordinator(request):
 
 
 @login_required(login_url='login')
-@user_passes_test(check_role_admin)
+@user_passes_test(check_role_pastorate_or_admin)
 def admin_registration(request):
  
     return render(request, 'admin_staff/admin_registration.html')
 
 
 
+
+
+
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Member, Family
+
 @login_required(login_url='login')
-@user_passes_test(check_role_admin)
+@user_passes_test(check_role_pastorate_or_admin)
 def list_family(request):
     family = Family.objects.all()
     return render(request, 'admin_staff/list_family.html', {'family': family})
@@ -368,7 +382,7 @@ def nysc_detail(request, id):
 
 
 @login_required(login_url='login')
-@user_passes_test(check_role_admin)
+@user_passes_test(check_role_pastorate_or_admin)
 def nysc(request):
     members = NYSC.objects.all()
     return render(request, 'admin_staff/nysc.html', {'members': members})
@@ -396,10 +410,10 @@ def list_members_nysc(request):
 
 
 @login_required(login_url='login')
-@user_passes_test(check_role_coordinator)
+@user_passes_test(check_role_facilitator)
 def list_members_car_kbn(request):
     members = Member.objects.all()
-    return render(request, 'coordinators/list_members_car_kbn.html', {'members': members})
+    return render(request, 'kbn/list_members_car_kbn.html', {'members': members})
 
 
 
@@ -407,10 +421,10 @@ def list_members_car_kbn(request):
 
 
 @login_required(login_url='login')
-@user_passes_test(check_role_coordinator)
+@user_passes_test(check_role_facilitator)
 def list_members_bus_kbn(request):
     members = Member.objects.all()
-    return render(request, 'coordinators/list_members_bus_kbn.html', {'members': members})
+    return render(request, 'kbn/list_members_bus_kbn.html', {'members': members})
 
 
 
@@ -425,10 +439,10 @@ def list_members_child(request):
 
 
 @login_required(login_url='login')
-@user_passes_test(check_role_coordinator)
+@user_passes_test(check_role_facilitator)
 def kbn_bus_car(request):
     members = Member.objects.all()
-    return render(request, 'coordinators/kbn_bus_car.html', {'members': members})
+    return render(request, 'kbn/kbn_bus_car.html', {'members': members})
 
 
 
@@ -836,13 +850,13 @@ def business_delete(request, pk):
 
 
 from django.http import JsonResponse
-
-from .forms import HouseholdForm
-
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 from .models import Household, HouseholdMember, Member
-from .forms import HouseholdMemberForm
+from .forms import HouseholdForm, HouseholdMemberForm
+
+User = get_user_model()
 
 def create_household(request):
     if request.method == 'POST':
@@ -868,17 +882,42 @@ def create_household(request):
 
 def search_members(request):
     query = request.GET.get('q')
-    members = Member.objects.filter(first_name__icontains=query) | Member.objects.filter(last_name__icontains=query) | Member.objects.filter(middle_name__icontains=query)
+    members = Member.objects.filter(
+        first_name__icontains=query
+    ) | Member.objects.filter(
+        last_name__icontains=query
+    ) | Member.objects.filter(
+        middle_name__icontains=query
+    )
     results = [{'id': member.id, 'name': f"{member.first_name} {member.middle_name} {member.last_name}"} for member in members]
     return JsonResponse(results, safe=False)
 
 
-
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Household, HouseholdMember, Member
+from .forms import HouseholdMemberForm
 
 def household_list(request):
     households = Household.objects.all()
-    return render(request, 'admin_staff/household_list.html', {'households': households})
+    return render(request, 'coordinators/household_list.html', {
+        'households': households,
+        'household_member_form': HouseholdMemberForm(),
+    })
 
+# def add_member(request, household_id):
+#     household = get_object_or_404(Household, id=household_id)
+#     if request.method == 'POST':
+#         form = HouseholdMemberForm(request.POST)
+#         if form.is_valid():
+#             member = form.cleaned_data['member']
+#             position = form.cleaned_data['position']
+#             HouseholdMember.objects.create(household=household, member=member, position=position)
+#             messages.success(request, 'Member added successfully.')
+#             return redirect('household_list')
+#         else:
+#             messages.error(request, 'Please correct the error below.')
+#     return redirect('household_list')
 
 
 def household_detail(request, household_id):
@@ -886,44 +925,109 @@ def household_detail(request, household_id):
     members = household.householdmember_set.all()
     return render(request, 'admin_staff/household_detail.html', {'household': household, 'members': members})
 
-def edit_household_member(request, household_id, member_id):
-    household_member = get_object_or_404(HouseholdMember, pk=member_id)
-    
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Household, HouseholdMember, Member
+from .forms import HouseholdMemberForm
+
+def add_member(request, household_id):
+    household = get_object_or_404(Household, id=household_id)
+    if request.method == 'POST':
+        form = HouseholdMemberForm(request.POST)
+        if form.is_valid():
+            household_member = form.save(commit=False)
+            household_member.household = household
+            household_member.save()
+            messages.success(request, 'Member added successfully.')
+            return redirect('household_list')
+    else:
+        form = HouseholdMemberForm()
+    return render(request, 'coordinators/add_member.html', {'form': form, 'household': household})
+
+def edit_member(request, household_member_id):
+    household_member = get_object_or_404(HouseholdMember, id=household_member_id)
     if request.method == 'POST':
         form = HouseholdMemberForm(request.POST, instance=household_member)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Household member updated successfully.')
-            return redirect('household_detail', household_id=household_member.household.id)
+            messages.success(request, 'Member details updated successfully.')
+            return redirect('household_list')
     else:
         form = HouseholdMemberForm(instance=household_member)
+    return render(request, 'coordinators/edit_member.html', {'form': form, 'household_member': household_member})
+
+def delete_member(request, household_member_id):
+    household_member = get_object_or_404(HouseholdMember, id=household_member_id)
+    household_member.delete()
+    messages.success(request, 'Member deleted successfully.')
+    return redirect('household_list')
+# def add_household_member(request, household_id):
+#     household = get_object_or_404(Household, pk=household_id)
     
-    return render(request, 'admin_staff/edit_household_member.html', {'form': form, 'household_member': household_member})
+#     if request.method == 'POST':
+#         form = HouseholdMemberForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, 'New member added successfully.')
+#             return redirect('household_detail', household_id=household.id)
+#     else:
+#         form = HouseholdMemberForm(initial={'household': household})
+    
+#     return render(request, 'admin_staff/add_household_member.html', {'form': form, 'household': household})
+
+
+# def delete_household_member(request, household_id, member_id):
+#     household_member = get_object_or_404(HouseholdMember, pk=member_id)
+#     household_member.delete()
+#     messages.success(request, 'Household member deleted successfully.')
+#     return redirect('household_detail', household_id=household_id)
 
 
 
 
-def add_household_member(request, household_id):
-    household = get_object_or_404(Household, pk=household_id)
+
+
+
+# views.py
+
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth import get_user_model
+from .models import Household, HouseholdMember, Member
+
+User = get_user_model()
+
+def members_by_household_username(request, username_id):
+    # Retrieve the User object using the ID (username_id)
+    user = get_object_or_404(User, id=username_id)
+    
+    # Filter households based on the user
+    households = Household.objects.filter(username=user)
+    
+    # Filter members based on households
+    members = Member.objects.filter(householdmember__household__in=households).distinct()
+    
+    return render(request, 'household_head/members_by_household_username.html', {
+        'members': members,
+        'households': households,
+    })
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Household, HouseholdMember, Member, MemberQuery
+
+@login_required
+def query_member(request, member_id):
+    member = get_object_or_404(Member, id=member_id)
     
     if request.method == 'POST':
-        form = HouseholdMemberForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'New member added successfully.')
-            return redirect('household_detail', household_id=household.id)
-    else:
-        form = HouseholdMemberForm(initial={'household': household})
+        query_text = request.POST.get('query_text')
+        if query_text:
+            MemberQuery.objects.create(member=member, user=request.user, query_text=query_text)
+            return redirect('members_by_household_username', username_id=request.user.id)
     
-    return render(request, 'admin_staff/add_household_member.html', {'form': form, 'household': household})
-
-
-def delete_household_member(request, household_id, member_id):
-    household_member = get_object_or_404(HouseholdMember, pk=member_id)
-    household_member.delete()
-    messages.success(request, 'Household member deleted successfully.')
-    return redirect('household_detail', household_id=household_id)
-
+    return render(request, 'household_head/query_member.html', {
+        'member': member,
+    })
 
 
 from django.http import JsonResponse
@@ -942,8 +1046,6 @@ def search_member_add(request):
             member_json['value'] = f"{member.first_name} {member.last_name}"
             results.append(member_json)
         return JsonResponse(results, safe=False)
-
-
 
 
 
@@ -1003,3 +1105,157 @@ def admin_teenager_list(request):
 def teenager_detail(request, teenager_id):
     teenager = get_object_or_404(Teenager, id=teenager_id)
     return render(request, 'admin_staff/teenager_detail.html', {'teenager': teenager})
+
+
+
+
+
+
+# views.py
+
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .forms import MessageForm
+from .models import Message
+
+@login_required
+def create_message(request):
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = request.user
+            message.save()
+            return redirect('message_list')
+    else:
+        form = MessageForm()
+    return render(request, 'pastorate/create_message.html', {'form': form})
+
+@login_required
+def past_message_list(request):
+    user = request.user
+    query = request.GET.get('q')
+    if query:
+        messages = Message.objects.filter(
+            recipient_role=user.role,
+            subject__icontains=query
+        ) | Message.objects.filter(
+            recipient_role=user.role,
+            body__icontains=query
+        )
+    else:
+        messages = Message.objects.filter(recipient_role=user.role)
+    return render(request, 'pastorate/past_message_list.html', {'messages': messages})
+
+
+@login_required
+
+def house_message_list(request):
+    user = request.user
+    query = request.GET.get('q')
+    if query:
+        messages = Message.objects.filter(
+            recipient_role=user.role,
+            subject__icontains=query
+        ) | Message.objects.filter(
+            recipient_role=user.role,
+            body__icontains=query
+        )
+    else:
+        messages = Message.objects.filter(recipient_role=user.role)
+    
+    return render(request, 'household_head/house_message_list.html', {'messages': messages, 'query': query})
+
+
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Message
+from .forms import MessageForm
+
+@login_required
+def past_message_detail(request, message_id):
+    message = get_object_or_404(Message, id=message_id)
+    replies = message.replies.all().order_by('created_at')
+
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            reply_message = form.save(commit=False)
+            reply_message.sender = request.user
+            reply_message.subject = f"Re: {message.subject}"
+            reply_message.recipient_role = message.sender.role
+            reply_message.parent_message = message
+            reply_message.save()
+            return redirect('past_message_detail', message_id=message.id)  # Redirect to the same message detail after submission
+    else:
+        form = MessageForm(initial={
+            'recipient_role': message.sender.role,
+            'subject': f"Re: {message.subject}",
+        })
+        
+
+    return render(request, 'pastorate/past_message_detail.html', {
+        'message': message,
+        'replies': replies,
+        'form': form,
+    })
+
+
+
+
+@login_required
+def house_message_detail(request, message_id):
+    message = get_object_or_404(Message, id=message_id)
+    replies = message.replies.all().order_by('created_at')
+
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            reply_message = form.save(commit=False)
+            reply_message.sender = request.user
+            reply_message.subject = f"Re: {message.subject}"
+            reply_message.recipient_role = message.sender.role
+            reply_message.parent_message = message
+            reply_message.save()
+            return redirect('house_message_detail', message_id=message.id)  # Redirect to the same message detail after submission
+    else:
+        form = MessageForm(initial={
+            'recipient_role': message.sender.role,
+            'subject': f"Re: {message.subject}",
+        })
+        
+
+    return render(request, 'household_head/house_message_detail.html', {
+        'message': message,
+        'replies': replies,
+        'form': form,
+    })
+
+
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Message
+from .forms import ReplyMessageForm
+
+@login_required
+def reply_message(request, message_id):
+    original_message = get_object_or_404(Message, id=message_id)
+    if request.method == 'POST':
+        form = ReplyMessageForm(request.POST)
+        if form.is_valid():
+            reply = form.save(commit=False)
+            reply.sender = request.user
+            reply.recipient_role = original_message.sender.role
+            reply.save()
+            return redirect('message_list')
+    else:
+        form = ReplyMessageForm()
+    
+    return render(request, 'household_head/reply_message.html', {
+        'form': form,
+        'original_message': original_message,
+    })

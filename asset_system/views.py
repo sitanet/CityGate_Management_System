@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 
 
 @login_required(login_url='login')
-@user_passes_test(check_role_mis)
+# @user_passes_test(check_role_mis)
 def asset_list(request):
     assets = Asset.objects.all()
     return render(request, 'assets/asset_list.html', {'assets': assets})

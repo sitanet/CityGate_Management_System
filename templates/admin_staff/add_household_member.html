@@ -5,26 +5,31 @@
         <div class="col-lg-8">
             <div class="card shadow-lg rounded-5">
                 <div class="card-header bg-dark text-white">
-                    <h4 class="mb-0">Add Household Member to {{ household.household_name }}</h4>
+                    <h4 class="mb-0">Create Household</h4>
                 </div>
                 <div class="card-body p-5">
                     <form method="post">
                         {% csrf_token %}
-                        {{ form.errors }}
-                        {{ form.non_field_errors }}
+                        {% if household_form.errors %}
+                            <div class="alert alert-danger">
+                                {{ household_form.errors }}
+                            </div>
+                        {% endif %}
+                        {% if household_form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ household_form.non_field_errors }}
+                            </div>
+                        {% endif %}
                         <div class="form-group">
-                            <label for="member">Member</label>
-                            {{ form.member }}
-                        </div>
-                        <div class="form-group d-none">
-                            {{ form.household }}
+                            <label for="household_name">Household Name</label>
+                            {{ household_form.household_name }}
                         </div>
                         <div class="form-group">
-                            <label for="position">Position</label>
-                            {{ form.position }}
+                            <label for="head">Household Head</label>
+                            {{ household_form.head }}
                         </div>
-                        <button type="submit" class="btn btn-success mt-3">Add Member</button>
-                        <a href="{% url 'household_detail' household.id %}" class="btn btn-secondary mt-3">Cancel</a>
+                        <button type="submit" class="btn btn-success mt-3">Create</button>
+                        <a href="{% url 'household_list' %}" class="btn btn-secondary mt-3">Cancel</a>
                     </form>
                 </div>
             </div>
