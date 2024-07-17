@@ -132,10 +132,10 @@ def past_display_comment(request):
 @user_passes_test(check_role_pastorate)
 def past_display_all_member(request):
     current_user = request.user
-    member = Member.objects.filter(status='1')
+    members = Member.objects.filter(status='1')
     # member = Member.objects.filter(team_lead=current_user).filter(status='1')
 
-    return render(request, 'pastorate/past_display_all_member.html', {'member': member})
+    return render(request, 'pastorate/past_display_all_member.html', {'members': members})
 
 def member_male(request):
     member_male = Member.objects.filter(gender=1)

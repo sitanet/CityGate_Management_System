@@ -339,7 +339,7 @@ User = get_user_model()
 class HouseholdForm(forms.ModelForm):
     class Meta:
         model = Household
-        fields = ['household_name', 'username']  # Include 'username' in the fields
+        fields = ['household_name', 'username', 'past_username']  # Include 'username' in the fields
 
     household_name = forms.CharField(
         label='Household Name',
@@ -350,6 +350,12 @@ class HouseholdForm(forms.ModelForm):
         label='Username',
         widget=forms.Select(attrs={'class': 'form-control'})
     )
+    past_username = forms.ModelChoiceField(
+        queryset=User.objects.all(),
+        label='Past_Username',
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
 
 
 

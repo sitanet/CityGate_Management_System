@@ -100,6 +100,8 @@ urlpatterns = [
     # #Complain
     # path('file_complaint/', views.file_complaint, name='file_complaint'),
     path('households/add_member/<int:household_id>/', views.add_member, name='add_member'),
+    path('chats/', views.list_chats, name='list_chats'),
+    path('household/<int:household_id>/chat/', views.chat_messages, name='chat_messages'),
     # path('households/complaints/', views.households_with_complaints, name='households_with_complaints'),
     # path('households/<int:household_id>/complaints/', views.household_complaints, name='household_complaints'),
     # path('complaints/<int:complaint_id>/resolve/', views.mark_resolved, name='mark_resolved'),
@@ -107,6 +109,8 @@ urlpatterns = [
     # path('create-tcgc-household/', views.create_tcgc_household, name='create_tcgc_household'),
     # path('search-members/', views.search_members, name='search_members'),
     path('members_by_username/<int:username_id>/', views.members_by_household_username, name='members_by_household_username'),
+    path('past_members_by_household_username/<int:username_id>/', views.past_members_by_household_username, name='past_members_by_household_username'),
+    
     path('query_member/<int:member_id>/', views.query_member, name='query_member'),
     path('household/<int:household_id>/', views.household_detail, name='household_detail'),
     # path('household/<int:household_id>/add_member/', views.add_member, name='add_member'),
@@ -131,7 +135,7 @@ urlpatterns = [
     path('messages/', views.past_message_list, name='past_message_list'),
     path('house_message_list/', views.house_message_list, name='house_message_list'),
     path('message/<int:message_id>/', views.past_message_detail, name='past_message_detail'),
-    path('message/<int:message_id>/', views.house_message_detail, name='house_message_detail'),
+    path('house_message_detail/<int:message_id>/', views.house_message_detail, name='house_message_detail'),
     path('messages/<int:message_id>/reply/', views.reply_message, name='reply_message'),
 
 

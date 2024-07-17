@@ -1011,23 +1011,102 @@ def members_by_household_username(request, username_id):
     })
 
 
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from .models import Household, HouseholdMember, Member, MemberQuery
 
-@login_required
+
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth import get_user_model
+from .models import Household, HouseholdMember, Member
+
+User = get_user_model()
+
+def past_members_by_household_username(request, username_id):
+    # Retrieve the User object using the ID (username_id)
+    user = get_object_or_404(User, id=username_id)
+    
+    # Filter households based on the user
+    households = Household.objects.filter(username=user)
+    
+    # Filter members based on households
+    members = Member.objects.filter(householdmember__household__in=households).distinct()
+    
+    return render(request, 'pastorate/members_by_household_username.html', {
+        'members': members,
+        'households': households,
+    })
+
+
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Member, MemberQuery, HouseholdMember
+
 def query_member(request, member_id):
     member = get_object_or_404(Member, id=member_id)
     
     if request.method == 'POST':
         query_text = request.POST.get('query_text')
         if query_text:
-            MemberQuery.objects.create(member=member, user=request.user, query_text=query_text)
+            # Fetch the HouseholdMember and related Household to get past_username
+            household_member = HouseholdMember.objects.filter(member=member).first()
+            if household_member:
+                household = household_member.household
+                past_username = household.past_username
+            else:
+                past_username = None
+            
+            # Create the MemberQuery with past_username
+            MemberQuery.objects.create(member=member, user=request.user, query_text=query_text, past_username=past_username)
             return redirect('members_by_household_username', username_id=request.user.id)
     
     return render(request, 'household_head/query_member.html', {
         'member': member,
     })
+
+
+
+from django.shortcuts import render
+from .models import Household, MemberQuery
+
+def list_chats(request):
+    user = request.user
+    households = Household.objects.filter(username=user)
+    chat_summaries = []
+
+    for household in households:
+        queries = MemberQuery.objects.filter(past_username=household.past_username).order_by('created_at')
+        if queries.exists():
+            chat_summaries.append({
+                'household': household,
+                'latest_message': queries.last()
+            })
+
+    return render(request, 'household_head/list_chats.html', {
+        'chat_summaries': chat_summaries,
+    })
+
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Household, MemberQuery, HouseholdMember
+
+def chat_messages(request, household_id):
+    household = get_object_or_404(Household, id=household_id)
+    queries = MemberQuery.objects.filter(past_username=household.past_username).order_by('created_at')
+
+    if request.method == 'POST':
+        query_id = request.POST.get('query_id')
+        reply_text = request.POST.get('reply_text')
+        if query_id and reply_text:
+            query = get_object_or_404(MemberQuery, id=query_id)
+            query.reply_text = reply_text
+            query.save()
+            return redirect('chat_messages', household_id=household_id)
+
+    return render(request, 'household_head/chat_messages.html', {
+        'household': household,
+        'queries': queries,
+    })
+
 
 
 from django.http import JsonResponse
@@ -1126,7 +1205,7 @@ def create_message(request):
             message = form.save(commit=False)
             message.sender = request.user
             message.save()
-            return redirect('message_list')
+            return redirect('past_message_list')
     else:
         form = MessageForm()
     return render(request, 'pastorate/create_message.html', {'form': form})

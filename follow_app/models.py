@@ -332,13 +332,15 @@ class OtherQualification(models.Model):
 
 
 
+from django.db import models
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
 class Household(models.Model):
     household_name = models.CharField(max_length=255)
-    username = models.ForeignKey(User, on_delete=models.CASCADE)
+    username = models.ForeignKey(User, on_delete=models.CASCADE, related_name='current_households')
+    past_username = models.ForeignKey(User, on_delete=models.CASCADE, related_name='past_households')
     members = models.ManyToManyField(Member, through='HouseholdMember')
 
     def __str__(self):
@@ -346,21 +348,22 @@ class Household(models.Model):
 
 
 
-from django.db import models
+
 from django.contrib.auth import get_user_model
+from django.db import models
 
 User = get_user_model()
 
 class MemberQuery(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    past_username = models.ForeignKey(User, on_delete=models.CASCADE, related_name='past_queries')
     query_text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    reply_text = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f"Query by {self.user.username} on {self.member.first_name} {self.member.last_name}"
-
-
 
 
 

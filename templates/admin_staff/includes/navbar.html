@@ -23,26 +23,19 @@
    <div class="sidebar_blog_2">
       <h4>General</h4>
       <ul class="list-unstyled components">
-         <li><a href="{% url 'myAccount' %}"><i class="fa fa-dashboard" style="color: #FF5733;"></i> <span>Dashboard</span></a>
-         </li>
-         <!-- <li><a href="{% url 'members_by_household_username' request.user.id %}"><i class="fa fa-dashboard" style="color: #FF5733;"></i> <span>Household List</span></a>
-         </li> -->
-         <!-- <li><a href="{% url 'admin_registration' %}"><i class="fa fa-user"style="color: #33FF57;"></i> <span>Registration</span></a>
-         </li> -->
-         <li><a href="{% url 'display_comment' %}"><i class="fa fa-user" style="color: #3357FF;"></i> <span>Comments</span></a>
-   </li>
+         <li><a href="{% url 'myAccount' %}"><i class="fa fa-dashboard" style="color: #FF5733;"></i> <span>Dashboard</span></a></li>
+         <!-- <li><a href="{% url 'members_by_household_username' request.user.id %}"><i class="fa fa-dashboard" style="color: #FF5733;"></i> <span>Household List</span></a></li> -->
+         <!-- <li><a href="{% url 'admin_registration' %}"><i class="fa fa-user" style="color: #33FF57;"></i> <span>Registration</span></a></li> -->
+         <li><a href="{% url 'display_comment' %}"><i class="fa fa-comments" style="color: #3357FF;"></i> <span>Comments</span></a></li>
 
          <li>
             <li>
-               <a href="#element" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i
-                       class="fa fa-diamond purple_color" style="color: #FFA833;"></i>
-                   <span>Report</span></a>
+               <a href="#element" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-diamond" style="color: #FFA833;"></i> <span>Report</span></a>
                <ul class="collapse list-unstyled" id="element">
-                   <li><a href="{% url 'display_all_member' %}">> <span>Display All Member</span></a></li>
-                   <li><a href="{% url 'all_comment' %}">> <span>Display All Comment</span></a></li>
-                   
+                  <li><a href="{% url 'display_all_member' %}">> <span>Display All Members</span></a></li>
+                  <li><a href="{% url 'all_comment' %}">> <span>Display All Comments</span></a></li>
                </ul>
-           </li>
+            </li>
             <ul class="collapse list-unstyled" id="element">
               
                <li><a href="displaySingleMember.html">> <span>Single Member</span></a></li>
@@ -73,21 +66,13 @@
             </div>
             <div class="right_topbar">
                <div class="icon_info">
-                  <!-- <ul>
-                     <li><a href="#"><i class="fa fa-bell-o"></i><span class="badge">2</span></a></li>
-                     <li><a href="#"><i class="fa fa-question-circle"></i></a></li>
-                     <li><a href="#"><i class="fa fa-envelope-o"></i><span class="badge">3</span></a></li>
-                  </ul> -->
                   <ul class="user_profile_dd">
                      <li>
-                        <a class="dropdown-toggle" data-toggle="dropdown"><img
-                              class="img-responsive rounded-circle" src="{{ user.profile_picture.url }}" onerror="this.src='{% static 'images/avatar.jpg' %}'"
-                              alt="Image" /> <b style="color: #fff;">{{ user.first_name}} {{ user.last_name}}</b><span class="name_user"></span></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown"><img class="img-responsive rounded-circle" src="{{ user.profile_picture.url }}" onerror="this.src='{% static 'images/avatar.jpg' %}'" alt="Image" /> <b style="color: #fff;">{{ user.first_name }} {{ user.last_name }}</b><span class="name_user"></span></a>
                         <div class="dropdown-menu">
                            <a class="dropdown-item" href="{% url 'profile' %}">My Profile</a>
                            <a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a>
-                           <a class="dropdown-item" href="{% url 'logout' %}"><span>Log Out</span> <i
-                                 class="fa fa-sign-out"></i></a>
+                           <a class="dropdown-item" href="{% url 'logout' %}"><span>Log Out</span> <i class="fa fa-sign-out" style="color: #FF5733;"></i></a>
                         </div>
                      </li>
                   </ul>

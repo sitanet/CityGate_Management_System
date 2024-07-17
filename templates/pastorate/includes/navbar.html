@@ -25,32 +25,32 @@
       <ul class="list-unstyled components">
          <li><a href="{% url 'myAccount' %}"><i class="fa fa-dashboard" style="color: #FF5733;"></i> <span>Dashboard</span></a>
          </li>
-         <li><a href="{% url 'past_message_list' %}"><i class="fa fa-user"style="color: #33FF57;"></i> <span>Display Messages</span></a>
+         <li><a href="{% url 'past_message_list' %}"><i class="fa fa-envelope" style="color: #fcff33;"></i> <span>Display Messages</span></a>
          </li>
-         <li><a href="{% url 'create_message' %}"><i class="fa fa-user"style="color: #33FF57;"></i> <span>Send Message</span></a>
+         <li><a href="{% url 'create_message' %}"><i class="fa fa-paper-plane" style="color: #33FF57;"></i> <span>Send Message</span></a>
          </li>
-         <li><a href="{% url 'display_comment' %}"><i class="fa fa-user" style="color: #3357FF;"></i> <span>Comments</span></a>
+         <li><a href="{% url 'display_comment' %}"><i class="fa fa-comments" style="color: #3357FF;"></i> <span>Comments</span></a>
+         </li>
    </li>
 
          <li>
             <li>
-               <a href="#element" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i
-                       class="fa fa-diamond purple_color" style="color: #FFA833;"></i>
-                   <span>Report</span></a>
+               <a href="#element" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-diamond" style="color: #FFA833;"></i> <span>Report</span></a>
                <ul class="collapse list-unstyled" id="element">
-                   <li><a href="{% url 'past_display_all_member' %}">> <span>Display All Member</span></a></li>
-                   <li><a href="{% url 'all_comment' %}">> <span>Display All Comment</span></a></li>
-                   
+                   <li><a href="{% url 'past_display_all_member' %}"><i class="fa fa-users" style="color: #FF5733;"></i> <span>Display All Member</span></a></li>
+                   <li><a href="{% url 'all_comment' %}"><i class="fa fa-comments" style="color: #3357FF;"></i> <span>Display All Comment</span></a></li>
+                   <li><a href="{% url 'asset_report_list' %}"><i class="fa fa-cubes" style="color: #FF33A1;"></i> <span>Display All Assets</span></a></li>
+                   <li><a href="{% url 'asset_depreciation_report' %}"><i class="fa fa-line-chart" style="color: #33A1FF;"></i> <span>Display All Depreciation</span></a></li>
                </ul>
-           </li>
+            </li>
             <ul class="collapse list-unstyled" id="element">
               
                <li><a href="displaySingleMember.html">> <span>Single Member</span></a></li>
                <li><a href="displayComment.html">> <span>Comments</span></a></li>
             </ul>
          </li>
-         <li><a href="{% url 'registeruser' %}"><i class="fa fa-users" style="color: #FF5733;"></i> <span>Registered
-                  Staffs</span></a></li>
+         <!-- <li><a href="{% url 'registeruser' %}"><i class="fa fa-users" style="color: #FF5733;"></i> <span>Registered
+                  Staffs</span></a></li> -->
 
          <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> <span>Log Out</span></a>
          </li>

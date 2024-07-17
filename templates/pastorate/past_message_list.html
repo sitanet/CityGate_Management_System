@@ -1,4 +1,4 @@
-{% extends "household_head/base.html" %}
+{% extends "pastorate/base.html" %}
 {% block content %}
 <div class="container-fluid mt-5">
     <div class="card shadow-lg">
@@ -18,7 +18,7 @@
 
             <!-- Messages List -->
             <ul id="message-list" class="list-group list-group-flush">
-                {% for message in messages %}
+                {% for message in member %}
                 <li class="list-group-item d-flex flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1 subject">{{ message.subject }}</h5>
